@@ -1,0 +1,4 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "cd airline_booking_app && npm install && npm run build"
+}
