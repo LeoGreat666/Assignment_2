@@ -33,10 +33,20 @@ export async function POST(request: NextRequest) {
     bookedAt: new Date()
   };
 
-  const result = await db.collection("schedules").updateOne(
-    { _id: schedule._id, $expr: { $lt: [{ $size: "$bookings" }, "$capacity"] } },
-    { $push: { bookings: booking } }
-  );
+const filter: any = {
+  _id: schedule._id,
+  $expr: {
+    $lt: [{ $size: "$bookings" }, "$capacity"]
+  }
+};
+
+const update: any = {
+  $push: {
+    bookings: booking
+  }
+};
+
+const result = await db.collection("schedules").updateOne(filter, update);
 
   if (!result.modifiedCount) return NextResponse.json({ error: "This scheduled flight has just become full." }, { status: 409 });
   return NextResponse.json({ reference: booking.reference }, { status: 201 });
